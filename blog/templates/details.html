@@ -1,0 +1,68 @@
+{% extends "layout.html" %} {% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h3 class="fw-bolder mb-1"> {{article.title}} </h3>
+                    <!--Author-->
+                    <p class="lead">by {{ article.author.username }} </p>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2"> {{ article.created_date }} </div>
+                    <hr>
+                </header>
+                <!-- Preview image figure-->
+                {% if article.article_image %}
+                <figure class="mb-4"><img class="img-fluid rounded" src=" {{ article.article_image.url }}" alt="..." /></figure>
+                {% else %} {% endif %}
+                <!-- Post content-->
+                <section class="mb-5">
+                    <p> {{ article.content | safe }}</p>
+                </section>
+            </article>
+            <!-- Comment form-->
+            <div class="card bg-light">
+                <div class="card-body">
+                    <form method="POST" action="{% url 'article:comment' article.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="formGroupExampleInput" class="form-label">Name</label>
+                            <input name="comment_author" id="comment_author" type="text" class="form-control" id="formGroupExampleInput" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput" class="form-label">Comment</label>
+                            <textarea name="comment_content" id="comment_content" class="form-control" rows="3" placeholder="Leave a comment!"></textarea>
+                            <button style="width: 250px;" type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div>
+            <hr>
+                <h4>Comments</h4>
+                <br>
+                {% if comments %} {% for comment in comments %}
+                <div class="d-flex">
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                    <div class="ms-3">
+                        <div class="fw-bold"> {{ comment.comment_author }} </div>
+                        {% comment %} {{ comment.comment_date }}<br> {% endcomment %}
+                        {{ comment.comment_content }}
+                    </div>
+                </div>
+                {% endfor %} {% else %}
+                <div class="alert alert-danger" role="alert">There is no comment for this article!</div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock body %}

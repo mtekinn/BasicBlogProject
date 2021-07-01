@@ -1,0 +1,56 @@
+{% extends "layout.html" %} {% block body %}
+<div class="col-lg-8">
+    <h3>Articles</h3>
+    <hr>
+    <div class="input-group">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+            {% csrf_token %}
+            <input type="search" name="keyword" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+</div>
+
+{% if articles %} {% for article in articles %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <a href="{% url 'article:detail' article.id %}">
+                        <h3 class="fw-bolder mb-1"> {{article.title}} </h3>
+                    </a>
+
+                    <!--Author-->
+                    <p class="lead">Posted by {{ article.author.username }} </p>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2"> {{ article.created_date }} </div>
+                    <hr>
+                </header>
+                <!-- Preview image figure-->
+                {% if article.article_image %}
+                <a href="{% url 'article:detail' article.id %}">
+                    <figure class="mb-4"><img class="img-fluid rounded" src=" {{ article.article_image.url }}" alt="..." /></figure>
+                </a>
+                {% else %} {% endif %}
+                <!-- Post content-->
+                <section class="mb-5">
+                    <p> {{ article.content | safe | truncatewords:25 }}</p>
+                    <a style="float:right;" href="{% url 'article:detail' article.id %}" class="btn btn-primary">Read more</a>
+                    <hr>
+                </section>
+            </article>
+        </div>
+    </div>
+</div>
+{% endfor %} {% else %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="alert alert-danger">There is no article!</div>
+    </div>
+</div>
+{% endif %} {% endblock body %}
